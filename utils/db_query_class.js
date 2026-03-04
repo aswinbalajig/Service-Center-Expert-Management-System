@@ -1,4 +1,4 @@
-import db_connection from "../config/db_config";
+import db_connection from "../config/db_config.js";
 
 
 class DBQuery {
@@ -28,6 +28,12 @@ convertNamedParams(sql, params) {
 async prepare(sql,params)
 {
     const { text, values } = this.convertNamedParams(sql, params);
+    
+    let debugQuery = text;
+    values.forEach((v, i) => {
+        debugQuery = debugQuery.replace(`$${i+1}`, `'${v}'`);
+    });
+    console.log("Executing query:", debugQuery);
     const result= await this.connection.query(text, values);
     return result;
 }

@@ -3,7 +3,9 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import process from "process"
 import { access } from "fs";
-import {jwt_login,jwt_verify} from auth_controller.js
+import {jwt_login,sign_up} from "../controllers/auth_controller.js";
+import {LoginValidator,userSchemaValidator,userProfileSchemaValidator} from "../middlewares/validators/auth.validators.js";
+import {validate} from "../middlewares/validators/validation.js";
 //import {"check_user_exists","check_password"} from "./service.js";
 
 const Router=express.Router();
@@ -18,8 +20,10 @@ Router.use((request,response,next)=>{
 })
 */
 
-Router.route('/jwt-login').get(jwt_login);
+Router.route("/login")
+  .post(LoginValidator, validate, jwt_login);
 
-Router.route('/jwt-verify').get(jwt_verify);
+Router.route("/signup")
+  .post(userSchemaValidator, userProfileSchemaValidator, validate, sign_up);
 
 export default Router;
