@@ -1,8 +1,7 @@
 import express from "express";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-import process from "process"
-import { access } from "fs";
+import process from "process";
 import {jwt_login,sign_up} from "../controllers/auth_controller.js";
 import {LoginValidator,userSchemaValidator,userProfileSchemaValidator} from "../middlewares/validators/auth.validators.js";
 import {validate} from "../middlewares/validators/validation.js";
@@ -25,5 +24,6 @@ Router.route("/login")
 
 Router.route("/signup")
   .post(userSchemaValidator, userProfileSchemaValidator, validate, sign_up);
+
 
 export default Router;

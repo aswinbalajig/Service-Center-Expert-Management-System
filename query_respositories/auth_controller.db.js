@@ -64,9 +64,18 @@ const profile_creation = async function (profile_credentials, user_id, edit_id, 
 
 };
 
+const get_user_profile = async function (user_id) {
+  let result = await db_obj.prepare(`SELECT * FROM security.user_profiles WHERE user_id = :user_id`, 
+    {
+      user_id
+    }
+  );
+  return result.rows[0];
+};
 
 export {
   check_user_exists,
   create_user,
-  profile_creation
+  profile_creation,
+  get_user_profile
 };
