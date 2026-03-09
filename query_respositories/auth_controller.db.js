@@ -54,7 +54,7 @@ const profile_creation = async function (profile_credentials, user_id, edit_id, 
       user_id,
       date_of_joining: profile_credentials.date_of_joining,
       phone_number: profile_credentials.phone_number,
-      role_id: profile_credentials.role_id,
+      role_id: null,
       first_name: profile_credentials.first_name,
       last_name: profile_credentials.last_name
     }
