@@ -12,15 +12,22 @@ const server = app.listen(PORT, HOST, () => {
 
 
 
+function shutdown(signal) {
+  console.log(`${signal} received. Starting graceful shutdown`);
 
+  server.close(() => {
+    console.log("HTTP server closed");
+    process.exit(0);
+  });
 
+  setTimeout(() => {
+    console.error("Forcing shutdown after timeout");
+    process.exit(1);
+  }, 10000).unref();
+}
 
-
-
-
-server.on("error", (err) => {
-  console.error("Server error:", err);
-  process.exit(1);
-});
+// Handle termination signals
+process.on("SIGTERM", shutdown);
+process.on("SIGINT", shutdown);
 
 
