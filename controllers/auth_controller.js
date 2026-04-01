@@ -35,14 +35,19 @@ const user_creation = async function (user_credentials, profile_credentials) {
     if (!user_id) {
       throw new Error("USER_CREATION_FAILED");
     }
-
-    const profile_id = await profile_creation(
-      profile_credentials,
-      user_id,
-      0,
-      0,
-    );
-
+    let profile_id;
+    if (profile_credentials.role_id !== 3) {
+      profile_id = await profile_creation(
+        profile_credentials,
+        user_id,
+        0,
+        0,
+      );
+    } else {
+      profile_id = await service_center_creation(
+        profile_credentials,0,0,user_id
+      );
+    }
     if (!profile_id) {
       throw new Error("PROFILE_CREATION_FAILED");
     }

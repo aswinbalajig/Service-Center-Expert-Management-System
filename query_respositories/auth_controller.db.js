@@ -38,30 +38,57 @@ const create_user = async function (user_credentials, edit_id, delete_id) {
 const profile_creation = async function (profile_credentials, user_id, edit_id, delete_id) {
 
   let result = await db_obj.prepare(
-    `SELECT security.manage_user_profile(
+  `SELECT security.manage_user_profile(
+      :edit_id,
+      :delete_id,
+      :user_id,
+      :date_of_joining,
+      :role_id,
+      :first_name,
+      :last_name,
+      :phone_number,
+      :service_center_id
+   ) AS profile_id;`,
+  {
+    edit_id,
+    delete_id,
+    user_id,
+    date_of_joining: profile_credentials.date_of_joining,
+    role_id: profile_credentials.role_id,
+    first_name: profile_credentials.first_name,
+    last_name: profile_credentials.last_name,
+    phone_number: profile_credentials.phone_number,
+    service_center_id: profile_credentials.service_center_id
+  }
+);
+  return result.rows[0].profile_id;
+
+};
+
+
+const service_center_creation = async function (
+  service_center,
+  edit_id,
+  delete_id,user_id
+) {
+  let result = await db_obj.prepare(
+    `SELECT security.manage_service_center_profile(
         :edit_id,
         :delete_id,
-        :user_id,
-        :date_of_joining,
-        :phone_number,
-        :role_id,
-        :first_name,
-        :last_name
-     ) AS profile_id;`,
+        :service_center_name,
+        :service_center_address,
+        :user_id
+     ) AS service_center_id;`,
     {
       edit_id,
       delete_id,
-      user_id,
-      date_of_joining: profile_credentials.date_of_joining,
-      phone_number: profile_credentials.phone_number,
-      role_id: null,
-      first_name: profile_credentials.first_name,
-      last_name: profile_credentials.last_name
+      service_center_name: service_center.service_center_name,
+      service_center_address: service_center.service_center_address,
+      user_id
     }
   );
 
-  return result.rows[0].profile_id;
-
+  return result.rows[0].service_center_id;
 };
 
 const get_user_profile = async function (user_id) {
@@ -73,9 +100,23 @@ const get_user_profile = async function (user_id) {
   return result.rows[0];
 };
 
+const update_service_center_id= async function (user_id, service_center_id) {
+  let result = await db_obj.prepare(
+    `UPDATE security.user_profiles 
+     SET service_center_id = :service_center_id 
+     WHERE user_id = :user_id`,
+    {
+      user_id,
+      service_center_id
+    }
+  );
+  return result.rowCount > 0;
+}
+
 export {
   check_user_exists,
   create_user,
   profile_creation,
-  get_user_profile
+  get_user_profile,
+  service_center_creation
 };

@@ -26,6 +26,17 @@ function shutdown(signal) {
   }, 10000).unref();
 }
 
+process.on('uncaughtException', (error) => {
+  shutdown('uncaughtException');
+});
+
+process.on('unhandledRejection', (reason, promise) => {
+  shutdown('unhandledRejection');
+});
+
+ 
+
+
 // Handle termination signals
 process.on("SIGTERM", shutdown);
 process.on("SIGINT", shutdown);
