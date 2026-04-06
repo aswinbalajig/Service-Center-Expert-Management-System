@@ -5,11 +5,11 @@ import morgan from "morgan";
 import auth_router from "./routers/auth_router.js";
 import issue_router from "./routers/service_center_router.js";
 import { jwt_verify } from "./middlewares/general_middlewares/auth.middlewares.js";
-
+import process from "process";
 const app = express();
 
 app.use(helmet());
-app.use(cors());
+app.use(cors({origin:process.env.FRONTEND_URL,credentials:true}));
 app.use(morgan("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));

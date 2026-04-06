@@ -7,6 +7,7 @@ import {
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 import db_connection from "../config/db_config.js";
+import process from "process";
 
 const login_check = async function (email_id, password) {
   const user = await check_user_exists(email_id);
@@ -104,10 +105,15 @@ const jwt_login = async function (request, response) {
     expiresIn: process.env.JWT_REFRESH_KEY_EXPIRY,
   });
 
+  response.cookie("refreshToken", refreshToken, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "strict",
+  });
+
   return response.status(200).json({
     data: {
       accessToken,
-      refreshToken,
     },
   });
 };
