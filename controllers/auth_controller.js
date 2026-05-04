@@ -67,6 +67,8 @@ const sign_up = async function (request, response) {
 
   try {
     const user_id = await user_creation(userCredentials, profileCredentials);
+    console.log("User created with ID:", user_id);
+    //return;
 
     return response.status(201).json({
       message: "USER_CREATED",
