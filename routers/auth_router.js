@@ -4,6 +4,7 @@ import jwt from "jsonwebtoken";
 import process from "process";
 import {jwt_login,sign_up} from "../controllers/auth_controller.js";
 import {LoginValidator,userSchemaValidator,userProfileSchemaValidator} from "../middlewares/validators/auth.validators.js";
+
 import {validate} from "../middlewares/validators/validation.js";
 //import {"check_user_exists","check_password"} from "./service.js";
 
@@ -21,6 +22,9 @@ Router.use((request,response,next)=>{
 
 Router.route("/login")
   .post(LoginValidator, validate, jwt_login);
+
+
+
 
 Router.route("/signup")
   .post(userSchemaValidator, userProfileSchemaValidator, validate, sign_up);
