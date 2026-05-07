@@ -19,6 +19,7 @@ import {
   ROLE_IDS,
   authorization,
 } from "../middlewares/general_middlewares/authorization.middleware.js";
+import { sendInvite } from "../controllers/invite_controller.js";
 
 
 
@@ -36,6 +37,8 @@ Router.route("/send").post(
 
 Router.route('/validate').post(
 authorization([ROLE_IDS.SERVICE_CENTER,ROLE_IDS.ADMIN]),
-validateInviteToken
+/* validateInviteToken */
 );
+
+export default Router;
 

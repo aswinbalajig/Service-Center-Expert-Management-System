@@ -16,14 +16,32 @@ SELECT security.manage_invites(
 
 */
 
-const createInvite = async function (inviteDetailsData)
+export const createInvite = async function (inviteDetailsData)
 {
-    const { edit_id, delete_id, invitee_email, service_center_id, role_id , token ,  expires_at } = inviteDetailsData;
+    const { edit_id, delete_id, invitee_email, role_id , service_center_id, invited_by_user_id, token ,  is_used, expires_at } = inviteDetailsData;
     let query = `
     SELECT security.manage_invites(
-    
-    )
-    
+	 :edit_id,
+	 :delete_id,
+	 :invitee_email,
+	 :role_id,
+	 :service_center_id,
+	 :invited_by_user_id,
+	 :token,
+	 :is_used,
+	 :expires_at
+    ) AS invite_id;    
     `;
-    let result = await db_obj.prepare(query,{})
+    let result = await db_obj.prepare(query,{
+		edit_id,
+		delete_id,
+		invitee_email,
+		role_id,
+		service_center_id,
+		invited_by_user_id,
+		token,
+		is_used,
+		expires_at
+	});
+    return result.rows[0].invite_id;
 }

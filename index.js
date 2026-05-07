@@ -4,6 +4,7 @@ import helmet from "helmet";
 import morgan from "morgan";
 import auth_router from "./routers/auth_router.js";
 import issue_router from "./routers/service_center_router.js";
+import invite_router from "./routers/invite_router.js";
 import { jwt_verify } from "./middlewares/general_middlewares/auth.middlewares.js";
 import process from "process";
 const app = express();
