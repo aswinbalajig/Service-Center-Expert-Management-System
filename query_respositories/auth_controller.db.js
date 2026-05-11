@@ -19,12 +19,14 @@ const create_user = async function (user_credentials, edit_id, delete_id) {
     `SELECT security.manage_users(
         :edit_id,
         :delete_id,
+        :role_id,
         :email_id,
         :password
      ) AS user_id;`,
     {
       edit_id,
       delete_id,
+      role_id: user_credentials.role_id,
       email_id: user_credentials.email_id,
       password: user_credentials.password
     }
@@ -43,7 +45,6 @@ const profile_creation = async function (profile_credentials, user_id, edit_id, 
       :delete_id,
       :user_id,
       :date_of_joining,
-      :role_id,
       :first_name,
       :last_name,
       :phone_number,
@@ -54,7 +55,6 @@ const profile_creation = async function (profile_credentials, user_id, edit_id, 
     delete_id,
     user_id,
     date_of_joining: profile_credentials.date_of_joining,
-    role_id: profile_credentials.role_id,
     first_name: profile_credentials.first_name,
     last_name: profile_credentials.last_name,
     phone_number: profile_credentials.phone_number,
@@ -92,7 +92,7 @@ const service_center_creation = async function (
 };
 
 const get_user_profile = async function (user_id) {
-  let result = await db_obj.prepare(`SELECT * FROM security.user_profiles WHERE user_id = :user_id`, 
+  let result = await db_obj.prepare(`SELECT * FROM security.user_profile WHERE user_id = :user_id`, 
     {
       user_id
     }
@@ -102,7 +102,7 @@ const get_user_profile = async function (user_id) {
 
 const update_service_center_id= async function (user_id, service_center_id) {
   let result = await db_obj.prepare(
-    `UPDATE security.user_profiles 
+    `UPDATE security.user_profile 
      SET service_center_id = :service_center_id 
      WHERE user_id = :user_id`,
     {

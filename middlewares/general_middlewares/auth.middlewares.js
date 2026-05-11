@@ -10,6 +10,7 @@ if (!authHeader)
     return response.status(401).json({ message: "TOKEN_MISSING" });
 
 const accessToken = authHeader.split(" ")[1];
+    console.log("Access Token:", accessToken);
 
     const user = jwt.verify(accessToken, process.env.JWT_SIGN_KEY);
 
@@ -20,7 +21,7 @@ const accessToken = authHeader.split(" ")[1];
     next();
 
   } catch (err) {
-
+    console.log(err.message);
     return response.status(401).json({
       message: "INVALID_TOKEN"
     });
