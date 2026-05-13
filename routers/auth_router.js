@@ -30,4 +30,8 @@ Router.route("/signup")
   .post(userSchemaValidator, userProfileSchemaValidator, validate, sign_up);
 
 
+Router.route("/service_center_signup")
+  .post(userSchemaValidator, serviceCenterProfileSchemaValidator, validate, sign_up);
+
+
 export default Router;

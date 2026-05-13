@@ -37,7 +37,7 @@ const user_creation = async function (user_credentials, profile_credentials) {
       throw new Error("USER_CREATION_FAILED");
     }
     let profile_id;
-    if (profile_credentials.role_id !== 3) {
+    if (user_credentials.role_id !== 3) {
       profile_id = await profile_creation(
         profile_credentials,
         user_id,

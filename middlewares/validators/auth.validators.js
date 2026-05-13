@@ -96,8 +96,36 @@ const userSchemaValidator = checkSchema({
 
 });
 
+
+const serviceCenterProfileSchemaValidator = checkSchema({
+
+  "profileCredentials.service_center_name": {
+    in: ["body"],
+    notEmpty: {
+      errorMessage: "Service center name is required"
+    },
+    isLength: {
+      options: { min: 2},
+      errorMessage: "Service center name must be at least 2 characters"
+    },
+    trim: true
+  },
+
+  "profileCredentials.service_center_address": {
+  in: ["body"],
+  notEmpty: {
+    errorMessage: "Address is required"
+  },
+  isLength: {
+    options: { min: 5 },
+    errorMessage: "Address must be at least 5 characters"
+  },
+  trim: true
+}});
+
 export{
     LoginValidator,
     userSchemaValidator,
-    userProfileSchemaValidator
-}
+    userProfileSchemaValidator,
+    serviceCenterProfileSchemaValidator
+} 
