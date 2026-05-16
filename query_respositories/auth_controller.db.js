@@ -92,7 +92,32 @@ const service_center_creation = async function (
 };
 
 const get_user_profile = async function (user_id) {
-  let result = await db_obj.prepare(`SELECT * FROM security.user_profile WHERE user_id = :user_id`, 
+  let result = await db_obj.prepare(`SELECT 
+    A.user_id,
+    A.email_id,
+    A.role_id,
+    B.profile_id,
+    B.first_name,
+    B.last_name,
+    B.phone_number,
+    B.date_of_joining,
+    B.service_center_id AS user_service_center_id,
+    C.service_center_id,
+    C.service_center_name,
+    C.service_center_address,
+
+    CASE 
+        WHEN A.role_id = 3 THEN 'SERVICE_CENTER'
+        ELSE 'INDIVIDUAL'
+    END AS profile_type
+
+FROM "security".users AS A 
+LEFT JOIN "security".user_profile AS B 
+    ON A.user_id = B.user_id 
+LEFT JOIN "security".service_center_profile AS C 
+    ON A.user_id = C.user_id
+
+WHERE A.user_id = :user_id;`, 
     {
       user_id
     }

@@ -16,7 +16,7 @@ const accessToken = authHeader.split(" ")[1];
 
     request.user_id = user.user_id;
     const profile_info=await get_user_profile(user.user_id);
-    request.profile_info=profile_info;
+    request.profile_info=Object.fromEntries(Object.entries(profile_info).filter(([key, value]) => value !== null));
 
     next();
 
