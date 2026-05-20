@@ -2,8 +2,8 @@ import express from "express";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import process from "process";
-import {jwt_login,sign_up} from "../controllers/auth_controller.js";
-import {LoginValidator,userSchemaValidator,userProfileSchemaValidator} from "../middlewares/validators/auth.validators.js";
+import {jwt_login,sign_up,get_user_profile} from "../controllers/auth_controller.js";
+import {LoginValidator,userSchemaValidator,userProfileSchemaValidator,serviceCenterProfileSchemaValidator} from "../middlewares/validators/auth.validators.js";
 
 import {validate} from "../middlewares/validators/validation.js";
 //import {"check_user_exists","check_password"} from "./service.js";
@@ -33,5 +33,9 @@ Router.route("/signup")
 Router.route("/service_center_signup")
   .post(userSchemaValidator, serviceCenterProfileSchemaValidator, validate, sign_up);
 
+
+
+Router.route('/me')
+  .get(get_user_profile);
 
 export default Router;

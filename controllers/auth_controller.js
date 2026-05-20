@@ -2,6 +2,7 @@ import {
   check_user_exists,
   create_user,
   profile_creation,
+  service_center_creation
 } from "../query_respositories/auth_controller.db.js";
 
 import jwt from "jsonwebtoken";
@@ -120,4 +121,14 @@ const jwt_login = async function (request, response) {
   });
 };
 
-export { jwt_login, sign_up };
+
+const get_user_profile = async function (request, response) {
+  
+  console.log
+
+  return response.status(200).json({profile_data:request.profile_info});
+
+}
+
+
+export { jwt_login, sign_up, get_user_profile };
