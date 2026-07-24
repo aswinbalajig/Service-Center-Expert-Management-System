@@ -1,0 +1,18 @@
+# Dependencies
+node_modules/
+npm-debug.log*
+
+# Secrets
+.env
+.env.*
+
+# Dev Files
+todo.txt
+.gitignore
+
+# Docker Files
+Dockerfile
+.dockerignore
+
+# Version Control
+.git/

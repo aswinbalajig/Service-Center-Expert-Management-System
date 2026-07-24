@@ -33,9 +33,15 @@ async prepare(sql,params)
     values.forEach((v, i) => {
         debugQuery = debugQuery.replace(`$${i+1}`, `'${v}'`);
     });
-    console.log("Executing query:", debugQuery);
+    try{
+       console.log("Executing query:", debugQuery);
     const result= await this.connection.query(text, values);
     return result;
+
+    }catch(err){
+        console.error("Error on executing query : ",err);
+    }
+   
 }
 
 
