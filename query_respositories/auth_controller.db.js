@@ -42,7 +42,7 @@ const invalidate_profile_cache = async function (user_id) {
   try {
     await redisClient.deleteKey(`profile:user:${user_id}`);
   } catch (error) {
-    console.warn("Failed to invalidate profile cache", error);
+    throw error;
   }
 };
 
@@ -148,7 +148,7 @@ const get_user_profile = async function (user_id) {
       return parse_cached_profile(cachedProfile);
     }
   } catch (error) {
-    console.warn("Redis profile cache read failed", error);
+    throw create_app_error("Redis profile cache read failed", error);
   }
 
   let result = await db_obj.prepare(
@@ -193,7 +193,7 @@ WHERE A.user_id = :user_id;`,
         PROFILE_CACHE_TTL_SECONDS,
       );
     } catch (error) {
-      console.warn("Redis profile cache write failed", error);
+      throw create_app_error("Redis profile cache write failed", error);
     }
   }
 
