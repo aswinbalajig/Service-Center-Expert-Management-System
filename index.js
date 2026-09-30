@@ -19,7 +19,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use("/auth", auth_router);
 app.use("/user", jwt_verify, user_router);
 app.use("/issue", jwt_verify, issue_router);
-app.use("/invite", jwt_verify, invite_router);
+app.use("/invite", invite_router);
 //app.use('/service_center',service_center_router);
 
 // Error handling middleware

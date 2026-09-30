@@ -38,7 +38,7 @@ USER node
 # FIX 5: Add cache mount ownership here as well
 RUN --mount=type=cache,target=/backend/api/.npm,uid=1000,gid=1000 \
   npm set cache /backend/api/.npm && \
-  npm ci --omit=devDependencies
+  npm ci --omit=dev
 
 EXPOSE 3000
 

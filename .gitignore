@@ -2,3 +2,14 @@ node_modules/
 .env
 .env.*
 todo.txt
+.mcp.json
+PROJECT_FEATURES_DOCUMENTATION.md
+
+# Logs
+*.log
+logs/
+
+# Editor / tooling
+.claude/
+.vscode/
+coverage/

@@ -12,14 +12,14 @@ import express from "express";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import process from "process";
-import {jwt_login,sign_up} from "../controllers/auth_controller.js";
-import {sendInviteValidator} from "../middlewares/validators/invite.validators.js";
+import {sendInviteValidator,inviteTokenValidator} from "../middlewares/validators/invite.validators.js";
 import {validate} from "../middlewares/validators/validation.js";
 import {
   ROLE_IDS,
   authorization,
 } from "../middlewares/general_middlewares/authorization.middleware.js";
-import { sendInvite } from "../controllers/invite_controller.js";
+import { jwt_verify } from "../middlewares/general_middlewares/auth.middlewares.js";
+import { sendInvite, validateInvite } from "../controllers/invite_controller.js";
 
 
 
@@ -27,6 +27,7 @@ import { sendInvite } from "../controllers/invite_controller.js";
 const Router=express.Router();
 
 Router.route("/send").post(
+  jwt_verify,
   authorization([ROLE_IDS.SERVICE_CENTER,ROLE_IDS.ADMIN]),
   sendInviteValidator,validate,
     sendInvite
@@ -35,9 +36,9 @@ Router.route("/send").post(
 
 
 
-Router.route('/validate').post(
-authorization([ROLE_IDS.SERVICE_CENTER,ROLE_IDS.ADMIN]),
-/* validateInviteToken */
+Router.route('/validate').get(
+  inviteTokenValidator,validate,
+  validateInvite
 );
 
 export default Router;

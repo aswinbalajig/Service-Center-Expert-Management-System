@@ -5,9 +5,11 @@ npm-debug.log*
 # Secrets
 .env
 .env.*
+.mcp.json
 
 # Dev Files
 todo.txt
+PROJECT_FEATURES_DOCUMENTATION.md
 .gitignore
 
 # Docker Files
@@ -16,3 +18,13 @@ Dockerfile
 
 # Version Control
 .git/
+
+# Logs
+*.log
+logs/
+
+# Editor / tooling
+.claude/
+.vscode/
+coverage/
+*.md

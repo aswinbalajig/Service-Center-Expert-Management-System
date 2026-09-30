@@ -45,3 +45,21 @@ export const createInvite = async function (inviteDetailsData)
 	});
     return result.rows[0].invite_id;
 }
+
+export const getInviteByToken = async function (token) {
+    let result = await db_obj.prepare(
+        `SELECT invite_id, invitee_email, role_id, service_center_id, invited_by_user_id, token, is_used, expires_at
+         FROM security.invites
+         WHERE token = :token`,
+        { token },
+    );
+    return result.rows[0];
+}
+
+export const markInviteUsed = async function (invite_id) {
+    let result = await db_obj.prepare(
+        `UPDATE security.invites SET is_used = true WHERE invite_id = :invite_id and is_used = false and expires_at > now()`,
+        { invite_id },
+    );
+    return result.rowCount > 0;
+}
