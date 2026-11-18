@@ -1,5 +1,6 @@
 import { AsyncLocalStorage } from "node:async_hooks";
 import db_connection from "../config/db_config.js";
+import logger from "../logger/logger.js";
 
 const transactionContext = new AsyncLocalStorage();
 
@@ -12,7 +13,8 @@ convertNamedParams(sql, params) {
   const values = [];
   const indexMap = {};
 
-  const text = sql.replace(/:(\w+)/g, (_, key) => {
+  // (?<!:) skips Postgres casts like ::text so they aren't read as parameters
+  const text = sql.replace(/(?<!:):(\w+)/g, (_, key) => {
     if (!(key in params)) {
       throw new Error(`Missing parameter: ${key}`);
     }
@@ -30,23 +32,25 @@ convertNamedParams(sql, params) {
 async prepare(sql,params)
 {
     const { text, values } = this.convertNamedParams(sql, params);
-    
-    let debugQuery = text;
-    values.forEach((v, i) => {
-        debugQuery = debugQuery.replace(`$${i+1}`, `'${v}'`);
-    });
+
+    // query values include password hashes, tokens and emails: debug level only, so production never logs them
+    if (logger.isDebugEnabled()) {
+        let debugQuery = text;
+        values.forEach((v, i) => {
+            debugQuery = debugQuery.replace(`$${i+1}`, `'${v}'`);
+        });
+        logger.debug(`Executing query: ${debugQuery}`);
+    }
     const transactionClient = transactionContext.getStore();
     const runner = transactionClient || this.connection;
 
     try{
-       console.log("Executing query:", debugQuery);
     const result= await runner.query(text, values);
     return result;
 
     }catch(err){
-        console.error("Error on executing query : ",err);
-        // inside a transaction the error must propagate so withTransaction can ROLLBACK
-        if (transactionClient) throw err;
+        //console.error("Error on executing query : ",err);
+        throw err;
     }
 
 }
@@ -66,7 +70,7 @@ async withTransaction(callback) {
         try {
             await client.query("ROLLBACK");
         } catch (rollbackErr) {
-            console.error("Error on ROLLBACK : ", rollbackErr);
+            logger.error(`Error on ROLLBACK : ${rollbackErr.stack || rollbackErr}`);
         }
         throw error;
     } finally {

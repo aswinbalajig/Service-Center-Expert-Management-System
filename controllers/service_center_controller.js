@@ -30,11 +30,21 @@ const create_issue = async (request, response) => {
 
 const update_status = async (request, response) => {
   const { issue_id, status } = request.body;
+  const service_center_id = request.profile_info.service_center_id;
   const data = {
     issue_id,
+    service_center_id,
     status,
   };
   const updated_issue_status = await update_issue_status(data);
+
+  if (!updated_issue_status) {
+    return response.status(404).json({
+      success: false,
+      message: "Issue not found or not owned by your service center",
+    });
+  }
+
   response.status(200).json({
     success: true,
     message: "Issue status updated",
@@ -45,9 +55,18 @@ const update_status = async (request, response) => {
 };
 
 const update_priority = async (request, response) => {
+  const service_center_id = request.profile_info.service_center_id;
   const { issue_id, priority } = request.body;
-  const data = { issue_id, priority };
+  const data = { issue_id, priority, service_center_id };
   const updated_issue_priority = await update_issue_priority(data);
+
+  if (!updated_issue_priority) {
+    return response.status(404).json({
+      success: false,
+      message: "Issue not found or not owned by your service center",
+    });
+  }
+
   response.status(200).json({
     success: true,
     message: "Issue priority updated",

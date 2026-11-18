@@ -10,17 +10,17 @@ const issue_CRUD = async function (issueDetailsData) {
     delete_id,
   } = issueDetailsData;
   let result = await db_obj.prepare(
-    `SELECT main.manage_issue(
+    `SELECT main.manage_issues(
             :action,
             :edit_id,
             :delete_id,
             :user_id,
-            :service_center_id,,
+            :service_center_id,
             :description,
             :priority,
-            :status       
+            :status
 
-        );`,
+        ) AS issue_id;`,
     {
       action: null,
       edit_id,
@@ -29,43 +29,52 @@ const issue_CRUD = async function (issueDetailsData) {
       service_center_id,
       description,
       priority,
-      status: "OPEN",
+      status: "open",
     },
   );
 
-  return result.rows[0];
+  return result.rows[0].issue_id;
 };
 
 const update_issue_status = async function (data) {
-  const { issue_id, status } = data;
+  const { issue_id, status, service_center_id } = data;
   let result = await db_obj.prepare(
     `SELECT main.manage_issues(
     p_action => :action,
     p_edit_id => :edit_id,
-    p_status => :status
-);`,
+    p_status => :status,
+    p_service_center_id => :service_center_id
+
+) AS issue_id;`,
     {
       action: "status_update",
       edit_id: issue_id,
       status,
+      service_center_id
     },
   );
+
+return result.rows[0].issue_id;
 };
 
 const update_issue_priority = async function (data) {
-  const { issue_id, priority } = data;
+  const { issue_id, priority, service_center_id } = data;
   let result = await db_obj.prepare(
     `SELECT main.manage_issues(
     p_action => :action,
     p_edit_id => :edit_id,
-    p_priority => :priority
-);`,
+    p_priority => :priority,
+    p_service_center_id => :service_center_id
+) AS issue_id;`,
     {
       action: "priority_update",
       edit_id: issue_id,
       priority,
+      service_center_id
     },
   );
+
+  return result.rows[0].issue_id;
 };
 
 const get_my_issues_query = async function (
@@ -83,7 +92,7 @@ const get_my_issues_query = async function (
   const offset = pagination.offset || 0;
 
   const query = `
-      SELECT *, COUNT(*) OVER() AS total_count
+      SELECT *, COUNT(*) OVER()::int AS total_count
       FROM main.issues
       ${conditions}
       ORDER BY issue_id DESC

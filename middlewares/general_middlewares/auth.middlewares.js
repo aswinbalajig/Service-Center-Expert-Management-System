@@ -15,14 +15,31 @@ const accessToken = authHeader.split(" ")[1];
 
     request.user_id = user.user_id;
     const profile_info=await get_user_profile(user.user_id);
+
+
+    if (!profile_info) {
+    
+      return response.status(401).json({
+        message: "USER_NOT_FOUND"
+      });
+    
+    }
+
     request.profile_info=Object.fromEntries(Object.entries(profile_info).filter(([key, value]) => value !== null));
+
+    
 
     next();
 
   } catch (err) {
-    return response.status(401).json({
-      message: "INVALID_TOKEN"
-    });
+    if(err.name==="TokenExpiredError" || err.name==="JsonWebTokenError")
+    {
+      return response.status(401).json({
+        message: "INVALID_TOKEN"
+      });
+    }
+
+    next(err);
 
   }
 };

@@ -9,21 +9,32 @@ import {
   ROLE_IDS,
   authorization,
 } from "../middlewares/general_middlewares/authorization.middleware.js";
-import { get_my_issues_validators } from "../middlewares/validators/service_center.validators.js";
+import {
+  get_my_issues_validators,
+  create_issue_validators,
+  update_status_validators,
+  update_priority_validators,
+} from "../middlewares/validators/service_center.validators.js";
 import { validate } from "../middlewares/validators/validation.js";
 
 const Router = express.Router();
 
 Router.route("/create").post(
   authorization([ROLE_IDS.SERVICE_CENTER]),
+  create_issue_validators,
+  validate,
   create_issue,
 );
 Router.route("/update_status").patch(
   authorization([ROLE_IDS.SERVICE_CENTER]),
+  update_status_validators,
+  validate,
   update_status,
 );
 Router.route("/update_priority").patch(
   authorization([ROLE_IDS.SERVICE_CENTER]),
+  update_priority_validators,
+  validate,
   update_priority,
 );
 

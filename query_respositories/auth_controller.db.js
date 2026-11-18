@@ -148,7 +148,7 @@ const get_user_profile = async function (user_id) {
       return parse_cached_profile(cachedProfile);
     }
   } catch (error) {
-    throw create_app_error("Redis profile cache read failed", error);
+    throw new Error("Redis profile cache read failed", {cause:error});
   }
 
   let result = await db_obj.prepare(
@@ -160,7 +160,7 @@ const get_user_profile = async function (user_id) {
     B.first_name,
     B.last_name,
     B.phone_number,
-    B.date_of_joining,
+    B.date_of_joining::text,
     B.service_center_id AS user_service_center_id,
     C.service_center_id,
     C.service_center_name,
@@ -193,7 +193,7 @@ WHERE A.user_id = :user_id;`,
         PROFILE_CACHE_TTL_SECONDS,
       );
     } catch (error) {
-      throw create_app_error("Redis profile cache write failed", error);
+      throw new Error("Redis profile cache write failed", {cause:error});
     }
   }
 

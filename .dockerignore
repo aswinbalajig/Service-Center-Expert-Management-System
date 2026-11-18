@@ -10,11 +10,18 @@ npm-debug.log*
 # Dev Files
 todo.txt
 PROJECT_FEATURES_DOCUMENTATION.md
+personal/
+docs/
 .gitignore
 
 # Docker Files
 Dockerfile
 .dockerignore
+
+# Tests
+tests/
+db/
+vitest.config.js
 
 # Version Control
 .git/

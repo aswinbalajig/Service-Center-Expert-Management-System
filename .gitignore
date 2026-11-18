@@ -5,6 +5,10 @@ todo.txt
 .mcp.json
 PROJECT_FEATURES_DOCUMENTATION.md
 
+# Personal reference docs
+docs/
+personal/
+
 # Logs
 *.log
 logs/
